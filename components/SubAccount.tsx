@@ -19,7 +19,6 @@ export default function SubAccount({ API_KEY, PRIVATE_KEY }: any) {
 			const restClient = new RestClientV5({
 				key: API_KEY,
 				secret: PRIVATE_KEY,
-				recv_window: 2
 			});
 
 			restClient.getPositionInfo({ category: 'linear', symbol: 'ATOMUSDT' })
@@ -31,7 +30,7 @@ export default function SubAccount({ API_KEY, PRIVATE_KEY }: any) {
 						symbol: payload.symbol,
 						leverage: payload.leverage,
 						size: payload.size,
-						entryPrice: payload.entryPrice,
+						entryPrice: payload.bustPrice,
 						markPrice: payload.markPrice,
 						liqPrice: payload.liqPrice,
 						unrealisedPnl: payload.unrealisedPnl
