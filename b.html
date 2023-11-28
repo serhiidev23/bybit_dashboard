@@ -1,0 +1,45 @@
+<style>
+  .tweets_list {
+    list-style: none;
+    padding: 0!important;
+  }
+</style>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+<div id="react"></div>
+
+<script type="text/babel">
+  // var cssLink = document.createElement("link");
+  // const frames = document.getElementsByTagName('iframe')
+  // frames.forEach(frame => {
+  //   frame.document.head.appendChild(`
+  //   <style>
+  //     article>p>span {
+  //       font-size: 0.5rem;
+  //     }
+  //   </style>
+  // `);
+  // })
+
+  const MyCustomComponent = ({ triggerQuery, model, modelUpdate }) => (
+    <ul className="tweets_list">
+      {model.tweets.map(item => (
+        <li>
+          <iframe
+            name="iframe1"
+            src={"https://react-tweet-next.vercel.app/light/" + item.id}
+            style={{ width: '100%', height: '500px', border: 'none', fontSize: '0.3rem!important'}}
+          >
+          </iframe>
+        </li>
+      ))}
+    </ul>
+  )
+
+  // This is the entrypoint for the React component.
+  const ConnectedComponent = Retool.connectReactComponent(MyCustomComponent)
+  const container = document.getElementById('react')
+  const root = ReactDOM.createRoot(container)
+  root.render(<ConnectedComponent />)
+</script>

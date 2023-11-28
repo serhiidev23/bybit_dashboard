@@ -1,0 +1,120 @@
+<style>
+	* {
+		font-family: 'Inter', sans-serif;
+	}
+
+	body {
+		margin: 0;
+	}
+
+	#react {
+		height: 100%;
+		width: 100%;
+	}
+
+	.card {
+		min-width: 0;
+		min-height: 20px;
+		display: flex;
+		justify-content: center;
+		padding: 5px;
+	}
+
+	.content {
+		margin-top: 4px;
+		font-size: 12px;
+		line-height: 18px;
+		font-weight: 400;
+		color: #777777;
+	}
+
+	.button {
+		border: none;
+		border-radius: 4px;
+		padding: 8px 16px;
+		font-weight: 500;
+		font-size: 12px;
+		cursor: pointer;
+		outline: none;
+		appearance: none;
+		user-select: auto;
+	}
+
+	.button--main {
+		background-color: #b062bc;
+		color: #ffffff;
+	}
+
+	.button--main:hover {
+		background-color: #9846a4;
+	}
+</style>
+
+<!-- You can add any HTML/CSS/JS here. UMD versions are required.
+Keep in mind that Custom Components are sensitive to bundle sizes, so try using a
+custom implementation when possible. -->
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+<div id="react"></div>
+
+<script type="text/babel">
+	window.Retool.subscribe(function (model) {
+		const websocket = new WebSocket(model.ws_url);
+		websocket.onopen = () => {
+			console.log('WebSocket connection opened');
+		};
+
+		websocket.onmessage = (event) => {
+			window.Retool.trigger(model.handler.table_query)
+		};
+
+		websocket.onerror = (error) => {
+			console.log('WebSocket connection error:', error);
+		};
+
+		websocket.onclose = () => {
+			console.log('WebSocket connection closed');
+		};
+
+		if (!model.connected) {
+			websocket.close()
+		}
+	});
+
+	const MyCustomComponent = ({ triggerQuery, model, modelUpdate }) => (
+		<div className="card">
+			{model.connected && (<button
+				className="button button--main"
+				onClick={() => modelUpdate({connected: false})}
+			>
+				Disconnect
+			</button>)}
+			{!model.connected && (<button
+				className="button button--main"
+				onClick={() => modelUpdate({connected: true})}
+			>
+				Connect
+			</button>)}
+		</div>
+	)
+
+	// This is the entrypoint for the React component.
+	const ConnectedComponent = Retool.connectReactComponent(MyCustomComponent)
+	const container = document.getElementById('react')
+	const root = ReactDOM.createRoot(container)
+	root.render(<ConnectedComponent />)
+</script>
+
+{{
+{
+	"ws_url": "wss://dev.alfablox.com/api/v1/ws/test",
+    "connected": true,
+	"handler": [{
+		"id": "dataTable",
+		"table_query": "refreshTable",
+		"subscribe_event_type": "TOKEN-PRICE-ACTION",
+		"subscribe_event_topic": "ALL",
+	}]
+}
+}}

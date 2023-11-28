@@ -21,28 +21,39 @@ export default function SubAccount({ API_KEY, PRIVATE_KEY }: any) {
 				secret: PRIVATE_KEY,
 			});
 
-			restClient.getPositionInfo({ category: 'linear', symbol: 'ATOMUSDT' })
+			restClient.getHistoricOrders({category: 'linear'})
 			.then(result => {
-				console.log("getPositionInfo result: ", result);
+				let lastSymbol = 'ATOMUSDT';
 				if (result.result.list) {
-					const payload: any = result.result.list[0];
-					setInfo({
-						symbol: payload.symbol,
-						leverage: payload.leverage,
-						size: payload.size,
-						entryPrice: payload.bustPrice,
-						markPrice: payload.markPrice,
-						liqPrice: payload.liqPrice,
-						unrealisedPnl: payload.unrealisedPnl
-					})
-					setError('')
+					lastSymbol = result.result.list[0]?.symbol;
 				}
-				else {
-					setError(result.retMsg)
-				}
+
+				restClient.getPositionInfo({ category: 'linear', symbol: lastSymbol })
+				.then(result => {
+					console.log("getPositionInfo result: ", result);
+					if (result.result.list) {
+						const payload: any = result.result.list[0];
+						setInfo({
+							symbol: payload.symbol,
+							leverage: payload.leverage,
+							size: payload.size,
+							entryPrice: payload.bustPrice,
+							markPrice: payload.markPrice,
+							liqPrice: payload.liqPrice,
+							unrealisedPnl: payload.unrealisedPnl
+						})
+						setError('')
+					}
+					else {
+						setError(result.retMsg)
+					}
+				})
+				.catch(err => {
+					console.error("getPositionInfo error: ", err);
+				});
 			})
 			.catch(err => {
-				console.error("getPositionInfo error: ", err);
+				console.error("getHistoricOrders error: ", err);
 			});
 		}
 
@@ -131,7 +142,7 @@ export default function SubAccount({ API_KEY, PRIVATE_KEY }: any) {
 					Entry Price
 				</div>
 				<div className="text-2xl relative flex place-items-center mx-2 ">
-					{Number(info.entryPrice).toFixed(2)}
+					{Number(info.entryPrice) > 0 ? Number(info.entryPrice).toFixed(2): info.entryPrice}
 				</div>
 			</div>
 			<div>
@@ -139,7 +150,7 @@ export default function SubAccount({ API_KEY, PRIVATE_KEY }: any) {
 					Mark Price
 				</div>
 				<div className="text-2xl relative flex place-items-center mx-2 ">
-					{Number(info.markPrice).toFixed(2)}
+					{Number(info.markPrice) > 0 ? Number(info.markPrice).toFixed(2): info.markPrice}
 				</div>
 			</div>
 			<div>
@@ -147,7 +158,7 @@ export default function SubAccount({ API_KEY, PRIVATE_KEY }: any) {
 					Estimated Liq. Price
 				</div>
 				<div className="text-2xl relative text-right mx-2 text-amber-400">
-					{Number(info.liqPrice).toFixed(2)}
+					{Number(info.liqPrice) > 0 ? Number(info.liqPrice).toFixed(2): (info.liqPrice || 0)}
 				</div>
 			</div>
 		</div>
