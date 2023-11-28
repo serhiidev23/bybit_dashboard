@@ -142,7 +142,7 @@ export default function SubAccount({ API_KEY, PRIVATE_KEY }: any) {
 					Entry Price
 				</div>
 				<div className="text-2xl relative flex place-items-center mx-2 ">
-					{Number(info.entryPrice) > 0 ? Number(info.entryPrice).toFixed(2): info.entryPrice}
+					{Number(info.entryPrice) > 1 ? Number(info.entryPrice).toFixed(2): info.entryPrice}
 				</div>
 			</div>
 			<div>
@@ -150,7 +150,7 @@ export default function SubAccount({ API_KEY, PRIVATE_KEY }: any) {
 					Mark Price
 				</div>
 				<div className="text-2xl relative flex place-items-center mx-2 ">
-					{Number(info.markPrice) > 0 ? Number(info.markPrice).toFixed(2): info.markPrice}
+					{Number(info.markPrice) > 1 ? Number(info.markPrice).toFixed(2): info.markPrice}
 				</div>
 			</div>
 			<div>
@@ -158,7 +158,7 @@ export default function SubAccount({ API_KEY, PRIVATE_KEY }: any) {
 					Estimated Liq. Price
 				</div>
 				<div className="text-2xl relative text-right mx-2 text-amber-400">
-					{Number(info.liqPrice) > 0 ? Number(info.liqPrice).toFixed(2): (info.liqPrice || 0)}
+					{Number(info.liqPrice) > 1 ? Number(info.liqPrice).toFixed(2): (info.liqPrice || 0)}
 				</div>
 			</div>
 		</div>
