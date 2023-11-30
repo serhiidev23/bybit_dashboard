@@ -16,10 +16,11 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="flex md:p-24 min-h-screen sm:p-5">
+    <main className="flex flex-col md:p-24 min-h-screen sm:p-5">
       {accounts.map((account: any, index) => 
         <SubAccount 
           key={index} 
+          index={index}
           API_KEY={account.API_KEY} 
           PRIVATE_KEY={account.PRIVATE_KEY} 
         />

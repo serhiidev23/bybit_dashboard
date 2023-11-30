@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { WebsocketClient, WSClientConfigurableOptions, RestClientV5 } from 'bybit-api';
 
-export default function SubAccount({ API_KEY, PRIVATE_KEY }: any) {
+export default function SubAccount({ API_KEY, PRIVATE_KEY, index }: any) {
 	const [info, setInfo] = useState({
 		symbol: '',
 		leverage: '',
@@ -25,6 +25,7 @@ export default function SubAccount({ API_KEY, PRIVATE_KEY }: any) {
 			.then(result => {
 				let lastSymbol = 'ATOMUSDT';
 				if (result.result.list) {
+					console.log("getOrdersInfo result: ", result)
 					lastSymbol = result.result.list[0]?.symbol;
 				}
 
@@ -37,7 +38,7 @@ export default function SubAccount({ API_KEY, PRIVATE_KEY }: any) {
 							symbol: payload.symbol,
 							leverage: payload.leverage,
 							size: payload.size,
-							entryPrice: payload.bustPrice,
+							entryPrice: payload.avgPrice,
 							markPrice: payload.markPrice,
 							liqPrice: payload.liqPrice,
 							unrealisedPnl: payload.unrealisedPnl
@@ -108,8 +109,11 @@ export default function SubAccount({ API_KEY, PRIVATE_KEY }: any) {
 		return 
 	}, [])
 
-	return error?<>{error}</>: (<div className='flex-col items-center justify-between w-full py-6 h-64'>
-		<div className="md:flex justify-between w-full py-5">
+	return error?<>{error}</>: (<div className='flex-col items-center justify-between w-full py-6 md:h-20 sm:h-64'>
+		<div className="md:flex justify-between w-full py-3 md:flex-row sm:flex-col">
+			<div className="text-2xl relative flex place-items-center mx-2">
+				{index}
+			</div>
 			<div>
 				<div className="relative flex place-items-center">
 					<span className='text-2xl mx-2'>{info.symbol}</span> 
@@ -127,8 +131,6 @@ export default function SubAccount({ API_KEY, PRIVATE_KEY }: any) {
 					{Number(info.unrealisedPnl).toFixed(2)}
 				</div>
 			</div>
-		</div>
-		<div className="md:flex justify-between w-full">
 			<div>
 				<div className="text-lg relative flex place-items-center opacity-70 mx-2">
 					Position Size
